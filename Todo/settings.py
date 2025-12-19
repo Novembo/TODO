@@ -14,8 +14,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 import os
 
-# Charger les variables d'environnement
-load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,7 +28,7 @@ SECRET_KEY = "django-insecure-h^^0m%it$_olq76e-3v-hvdy8%pcz_qq$e+*j97a9mjvmbsro#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [*]
+ALLOWED_HOSTS = ['127.0.0.1','localhost','vercel.app']
 
 
 # Application definition
@@ -84,8 +82,8 @@ WSGI_APPLICATION = "Todo.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": os.getenv('DATABASE_ENGINE'),
-        "NAME": os.getenv('DATABASE_NAME'),
+        "ENGINE": 'django.db.backends.sqlite3',
+        "NAME": BASE_DIR/ 'db.sqlite3'
     }
 }
 

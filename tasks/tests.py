@@ -7,6 +7,7 @@ from django.utils import timezone
 from .models import Task
 import json
 
+
 class TaskAPITestCase(TestCase):
     """Classe de test pour l'API Task"""
     
