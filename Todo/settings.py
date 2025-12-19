@@ -87,6 +87,20 @@ DATABASES = {
     }
 }
 
+# Configuration pour production (Vercel)
+if os.environ.get('VERCEL_ENV'):
+    # Utilise la variable d'environnement fournie par Neon
+    db_info = urlparse(os.environ['DATABASE_URL'])
+    
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': db_info.path[1:],
+        'USER': db_info.username,
+        'PASSWORD': db_info.password,
+        'HOST': db_info.hostname,
+        'PORT': db_info.port,
+        'OPTIONS': {'sslmode': 'require'},
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
