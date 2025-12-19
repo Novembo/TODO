@@ -117,4 +117,3 @@ Pour tester l'application déployée :
     Testez les endpoints CRUD directement depuis Swagger UI
 
     Vérifiez les tests unitaires dans le dépôt Git
-S
