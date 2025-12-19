@@ -12,7 +12,7 @@ API REST complète pour la gestion de tâches développée avec **Django** et **
 - **Pagination automatique** des résultats
 - **Validation des données** robuste
 
-## URLs du Projet Déployé
+## 🔗 URLs du Projet Déployé
 
 - **URL principale de l'API** : `https://[votre-username].pythonanywhere.com`
 - **Documentation Swagger UI** : `https://[votre-username].pythonanywhere.com/api/docs/`
