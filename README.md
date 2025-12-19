@@ -1,24 +1,24 @@
-# 🚀 API de Gestion de Tâches (TODO) - Django REST Framework
+# API de Gestion de Tâches (TODO) - Django REST Framework
 
-## 📋 Description du Projet
+## Description du Projet
 
 API REST complète pour la gestion de tâches développée avec **Django** et **Django REST Framework**. Ce projet répond aux spécifications du test technique pour un poste de Développeur Backend.
 
-### ✨ Fonctionnalités principales
-- ✅ **CRUD complet** via API REST
-- ✅ **Documentation interactive** Swagger/OpenAPI
-- ✅ **Tests unitaires** complets (20 tests)
-- ✅ **Déploiement** sur PythonAnywhere
-- ✅ **Pagination automatique** des résultats
-- ✅ **Validation des données** robuste
+### Fonctionnalités principales
+- **CRUD complet** via API REST
+- **Documentation interactive** Swagger/OpenAPI
+- **Tests unitaires** complets (20 tests)
+- **Déploiement** sur PythonAnywhere
+- **Pagination automatique** des résultats
+- **Validation des données** robuste
 
 ## 🔗 URLs du Projet Déployé
 
-- 🌐 **URL principale de l'API** : `https://[votre-username].pythonanywhere.com`
-- 📚 **Documentation Swagger UI** : `https://[votre-username].pythonanywhere.com/api/docs/`
-- 📄 **Schéma OpenAPI** : `https://[votre-username].pythonanywhere.com/api/schema/`
+- **URL principale de l'API** : `https://[votre-username].pythonanywhere.com`
+- **Documentation Swagger UI** : `https://[votre-username].pythonanywhere.com/api/docs/`
+- **Schéma OpenAPI** : `https://[votre-username].pythonanywhere.com/api/schema/`
 
-## ⚠️ Limitations du Plan Gratuit PythonAnywhere
+## Limitations du Plan Gratuit PythonAnywhere
 
 Le projet est déployé sur le plan gratuit de PythonAnywhere, qui présente les limitations suivantes :
 
@@ -34,7 +34,7 @@ Le projet est déployé sur le plan gratuit de PythonAnywhere, qui présente les
 
 ---
 
-## 🛠️ Installation Locale
+## Installation Locale
 
 ### Prérequis
 - Python 3.9 ou supérieur
@@ -117,3 +117,4 @@ Pour tester l'application déployée :
     Testez les endpoints CRUD directement depuis Swagger UI
 
     Vérifiez les tests unitaires dans le dépôt Git
+S
