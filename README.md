@@ -2,7 +2,7 @@
 
 ## Description du Projet
 
-API REST complète pour la gestion de tâches développée avec **Django** et **Django REST Framework**. Ce projet répond aux spécifications du test technique pour un poste de Développeur Backend.
+API REST complète pour la gestion de tâches développée avec **Django** et **Django REST Framework**.
 
 ### Fonctionnalités principales
 - **CRUD complet** via API REST
@@ -12,11 +12,11 @@ API REST complète pour la gestion de tâches développée avec **Django** et **
 - **Pagination automatique** des résultats
 - **Validation des données** robuste
 
-## 🔗 URLs du Projet Déployé
+## URLs du Projet Déployé
 
-- **URL principale de l'API** : `https://[votre-username].pythonanywhere.com`
-- **Documentation Swagger UI** : `https://[votre-username].pythonanywhere.com/api/docs/`
-- **Schéma OpenAPI** : `https://[votre-username].pythonanywhere.com/api/schema/`
+- **URL principale de l'API** : `https://solv2.pythonanywhere.com`
+- **Documentation Swagger UI** : `https://solv2.pythonanywhere.com/api/docs/`
+- **Schéma OpenAPI** : `https://solv2.pythonanywhere.com/api/schema/`
 
 ## Limitations du Plan Gratuit PythonAnywhere
 
