@@ -353,13 +353,13 @@ class TaskModelTest(TestCase):
             is_completed=True
         )
         
-        expected_str = f"OK {task.title}"
+        expected_str = f"{task.title} => Terminée"
         self.assertEqual(str(task), expected_str)
         
         task.is_completed = False
         task.save()
         
-        expected_str = f"NOK {task.title}"
+        expected_str = f"{task.title} => En cours"
         self.assertEqual(str(task), expected_str)
     
     def test_default_ordering(self):
