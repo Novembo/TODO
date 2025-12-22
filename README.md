@@ -44,38 +44,38 @@ Le projet est déployé sur le plan gratuit de PythonAnywhere, qui présente les
 ### Étapes d'installation
 
 1. **Cloner le dépôt**
-   git clone [https://github.com/Novembo/TODO.git]
-   cd todo-api-django
+   _git clone [https://github.com/Novembo/TODO.git]_
+   _cd Todo_
 
 2. **Créer un environnement virtuel**
     # Windows
-    python -m venv venv
-    venv\Scripts\activate
+    _python -m venv venv_
+    _venv\Scripts\activate_
 
     # Linux/Mac
-    python3 -m venv venv
-    source venv/bin/activate
+    _python3 -m venv venv_
+    _source venv/bin/activate_
 
 3. **Installer les dépendances**
-    pip install -r requirements.txt
+    _pip install -r requirements.txt_
 
 4. **Initialiser la base de données**
     ### Si vous utilisez une base de données autre que SQLITE, 
     ### vous devez d'abord créer la base de données avant de l'initialiser
-    python manage.py migrate
+    _python manage.py migrate_
 
 5. **Lancer le serveur**
-    python manage.py runserver
+    _python manage.py runserver_
 
 
 6. **L'application sera accessible aux URLs suivantes :**
-    _Interface API : http://localhost:8000/_
-    _Administration Django : http://localhost:8000/admin/_
-    _Documentation Swagger : http://localhost:8000/api/docs/_
+    _***Interface API*** : http://localhost:8000/_
+    _***Administration Django*** : http://localhost:8000/admin/_
+    _***Documentation Swagger*** : http://localhost:8000/api/docs/_
 
 7. **Exécuter les tests**
     # Exécuter tous les tests
-    python manage.py test tasks
+    _python manage.py test tasks_
 
 
 
