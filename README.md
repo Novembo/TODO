@@ -44,7 +44,7 @@ Le projet est déployé sur le plan gratuit de PythonAnywhere, qui présente les
 ### Étapes d'installation
 
 1. **Cloner le dépôt**
-   git clone [https://github.com/votre-username/todo-api-django.git](https://github.com/Novembo/TODO.git)
+   git clone [https://github.com/Novembo/TODO.git]
    cd todo-api-django
 
 2. **Créer un environnement virtuel**
