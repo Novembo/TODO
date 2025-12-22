@@ -44,7 +44,7 @@ Le projet est déployé sur le plan gratuit de PythonAnywhere, qui présente les
 ### Étapes d'installation
 
 1. **Cloner le dépôt**
-   _git clone [https://github.com/Novembo/TODO.git]_
+   _git clone https://github.com/Novembo/TODO.git_\n
    _cd Todo_
 
 2. **Créer un environnement virtuel**
