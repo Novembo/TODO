@@ -34,6 +34,14 @@ Le projet est déployé sur le plan gratuit de PythonAnywhere, qui présente les
 
 ---
 
+## Configuration
+
+Le fichier `.env` local est chargé automatiquement et reste exclu de Git. Le workflow GitHub Actions utilise les variables de dépôt `DEBUG`, `ALLOWED_HOSTS`, `CORS_ALLOWED_ORIGINS`, `CORS_ALLOW_METHODS`, `TYPE_DATABASE`, `DATABASE_ENGINE` et `DATABASE_NAME`.
+
+En production, définissez également `SECRET_KEY` dans l'environnement de l'hébergeur. Ne la commitez jamais. Quand `DEBUG` est désactivé, l'application refuse de démarrer sans cette clé.
+
+---
+
 ## Installation Locale
 
 ### Prérequis

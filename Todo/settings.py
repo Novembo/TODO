@@ -12,8 +12,13 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from dotenv import load_dotenv
+from django.core.exceptions import ImproperlyConfigured
+from django.core.management.utils import get_random_secret_key
 import os
+from urllib.parse import urlparse
 
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,13 +27,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-h^^0m%it$_olq76e-3v-hvdy8%pcz_qq$e+*j97a9mjvmbsro#"
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "False").strip().lower() in {"1", "true", "yes", "on"}
 
-ALLOWED_HOSTS = ['127.0.0.1','localhost','vercel.app']
+SECRET_KEY = os.environ.get("SECRET_KEY")
+if not SECRET_KEY:
+    if DEBUG:
+        SECRET_KEY = get_random_secret_key()
+    else:
+        raise ImproperlyConfigured("SECRET_KEY must be set when DEBUG is disabled.")
+
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.environ.get("ALLOWED_HOSTS", "127.0.0.1,localhost,vercel.app").split(",")
+    if host.strip()
+]
 
 
 # Application definition
@@ -41,6 +54,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
+    "corsheaders",
     'rest_framework',
     'drf_spectacular',
     "tasks"
@@ -50,11 +64,26 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     'whitenoise.middleware.WhiteNoiseMiddleware',
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+]
+
+CORS_ALLOWED_ORIGINS = [
+    origin.strip()
+    for origin in os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",")
+    if origin.strip()
+]
+CORS_ALLOW_METHODS = [
+    method.strip()
+    for method in os.environ.get(
+        "CORS_ALLOW_METHODS",
+        "DELETE,GET,OPTIONS,PATCH,POST,PUT",
+    ).split(",")
+    if method.strip()
 ]
 
 ROOT_URLCONF = "Todo.urls"
@@ -82,8 +111,13 @@ WSGI_APPLICATION = "Todo.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": 'django.db.backends.sqlite3',
-        "NAME": BASE_DIR/ 'db.sqlite3'
+        "ENGINE": os.environ.get("DATABASE_ENGINE")
+        or (
+            "django.db.backends.postgresql"
+            if os.environ.get("TYPE_DATABASE", "").strip().lower() in {"postgres", "postgresql"}
+            else "django.db.backends.sqlite3",
+        ),
+        "NAME": os.environ.get("DATABASE_NAME") or str(BASE_DIR / "db.sqlite3"),
     }
 }
 
