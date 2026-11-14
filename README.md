@@ -1,149 +1,203 @@
-# TODO — API de gestion de tâches
+# TODO — API REST de Gestion de Tâches
 
 [![CI](https://github.com/Novembo/TODO/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Novembo/TODO/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-blue?logo=python)
+![Django](https://img.shields.io/badge/Django-5.0-092e20?logo=django)
+![DRF](https://img.shields.io/badge/DRF-3.15-red)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon%20Serverless-4169e1?logo=postgresql)
+![Status](https://img.shields.io/badge/Production-Live-success)
 
-API REST de gestion de tâches construite avec Django REST Framework. Elle propose les opérations CRUD complètes, la pagination configurable et une documentation OpenAPI / Swagger interactive.
+API REST complète et performante de gestion de tâches construite avec **Django REST Framework (DRF)**. Le projet propose les opérations CRUD complètes, la pagination configurable, la validation stricte des données et une documentation interactive **OpenAPI v3 / Swagger UI**.
 
-**Stack technique :** Django 5 · Django REST Framework · drf-spectacular · WhiteNoise · SQLite (local) · PostgreSQL (hébergement) · Gunicorn · Docker
-
----
-
-## Fonctionnalités et documentation
-
-- **CRUD complet des tâches :** `/api/tasks/` et `/api/tasks/{id}/` (création, lecture, modification complète `PUT`, modification partielle `PATCH`, suppression `DELETE`)
-- **Pagination configurable :** via le paramètre `page_size` (taille par défaut : 10, maximum : 100)
-- **Documentation interactive Swagger UI :** `/api/docs/`
-- **Schéma de spécification OpenAPI v3 :** `/api/schema/`
-- **Point d'entrée racine :** `/` (présentation de l'API et liens rapides vers les endpoints)
+**Stack technique :** Python 3.12 · Django 5 · Django REST Framework · drf-spectacular · PostgreSQL (Neon Serverless) · SQLite (local) · Gunicorn · WhiteNoise · Docker · GitHub Actions
 
 ---
 
-## 🔗 Déploiement en ligne (Production)
+## 🚀 Démo en ligne (Production)
 
-L'API est déployée et active sur **Render** avec persistance sur **Neon PostgreSQL** :
+L'API est hébergée sur **Render** et reliée à une base de données **PostgreSQL serverless sur Neon** :
 
-- **Racine de l'API :** [https://novembo-todo-api.onrender.com/](https://novembo-todo-api.onrender.com/)
-- **Documentation Swagger UI :** [https://novembo-todo-api.onrender.com/api/docs/](https://novembo-todo-api.onrender.com/api/docs/)
-- **Schéma OpenAPI :** [https://novembo-todo-api.onrender.com/api/schema/](https://novembo-todo-api.onrender.com/api/schema/)
-- **Endpoint des tâches :** [https://novembo-todo-api.onrender.com/api/tasks/](https://novembo-todo-api.onrender.com/api/tasks/)
+- 📖 **Documentation Swagger UI :** [https://novembo-todo-api.onrender.com/api/docs/](https://novembo-todo-api.onrender.com/api/docs/)
+- 🌐 **Point d'entrée racine :** [https://novembo-todo-api.onrender.com/](https://novembo-todo-api.onrender.com/)
+- 📋 **Schéma OpenAPI v3 :** [https://novembo-todo-api.onrender.com/api/schema/](https://novembo-todo-api.onrender.com/api/schema/)
+- ⚡ **Endpoint API des tâches :** [https://novembo-todo-api.onrender.com/api/tasks/](https://novembo-todo-api.onrender.com/api/tasks/)
 
 ---
 
-## Lancer en local
+## 📌 Endpoints de l'API
+
+| Méthode | Endpoint | Description | Paramètres / Payload |
+|---|---|---|---|
+| `GET` | `/` | Informations sur l'API, version et sitemap | Aucun |
+| `GET` | `/api/tasks/` | Liste paginée de toutes les tâches | `page` (défaut: 1), `page_size` (défaut: 10, max: 100) |
+| `POST` | `/api/tasks/` | Création d'une nouvelle tâche | `title` *(requis)*, `description`, `is_completed` |
+| `GET` | `/api/tasks/{id}/` | Détail d'une tâche spécifique | `id` (entier dans l'URL) |
+| `PUT` | `/api/tasks/{id}/` | Remplacement complet d'une tâche | Tous les champs requis |
+| `PATCH` | `/api/tasks/{id}/` | Modification partielle d'une tâche | Un ou plusieurs champs |
+| `DELETE` | `/api/tasks/{id}/` | Suppression définitive d'une tâche | `id` (entier dans l'URL) |
+| `GET` | `/api/docs/` | Interface interactive Swagger UI | Visualisation et test direct des requêtes |
+| `GET` | `/api/schema/` | Spécification brute OpenAPI (YAML/JSON) | Consommable par Postman ou des générateurs SDK |
+
+---
+
+## 📂 Structure du projet
+
+```text
+TODO/
+├── Todo/                       # Module de configuration global Django
+│   ├── asgi.py                 # Point d'entrée ASGI
+│   ├── settings.py             # Paramètres (env, BDD, WhiteNoise, DRF, CORS, Swagger)
+│   ├── urls.py                 # Routage principal et endpoints de documentation
+│   └── wsgi.py                 # Point d'entrée WSGI pour Gunicorn
+├── tasks/                      # Application de gestion des tâches
+│   ├── migrations/             # Historique des migrations du schéma de données
+│   ├── admin.py                # Configuration de l'administration Django
+│   ├── apps.py                 # Déclaration de l'application
+│   ├── models.py               # Modèle Task (titre, description, is_completed, timestamps)
+│   ├── serializers.py          # Validation des données et sérialisation REST
+│   ├── tests.py                # Suite complète de 20 tests unitaires et d'intégration
+│   ├── urls.py                 # Routage des vues tâches
+│   └── views.py                # Vues API (home_view, liste, CRUD unitaire)
+├── .github/workflows/          # Intégration continue (CI/CD)
+│   └── ci.yml                  # Pipeline GitHub Actions (check, migrations, tests)
+├── .dockerignore               # Fichiers exclus de l'image Docker
+├── .env.example                # Modèle de variables d'environnement
+├── .gitignore                  # Fichiers exclus du suivi Git
+├── .python-version             # Épinglage de la version Python pour l'hébergeur (3.12.8)
+├── build.sh                    # Script automatisé de déploiement (install, static, migrate)
+├── Dockerfile                  # Image Docker multi-plateforme
+├── manage.py                   # CLI de gestion Django
+├── requirements.txt            # Dépendances de production et de test
+└── README.md
+```
+
+---
+
+## 💻 Lancer en local
 
 ### Prérequis
-- Python 3.10 ou version ultérieure (testé avec Python 3.11 et 3.12).
+- Python 3.10 ou version ultérieure (recommandé : 3.11 ou 3.12).
+- Git.
 
-### Windows PowerShell
+### Windows (PowerShell)
 
 ```powershell
+# 1. Cloner le dépôt et entrer dans le dossier
+git clone https://github.com/Novembo/TODO.git
+cd TODO
+
+# 2. Créer et activer l'environnement virtuel
 py -m venv .venv
 .\.venv\Scripts\Activate.ps1
+
+# 3. Installer les dépendances
 python -m pip install -r requirements.txt
+
+# 4. Configurer les variables d'environnement
 Copy-Item .env.example .env
+
+# 5. Appliquer les migrations de base de données
 python manage.py migrate
+
+# 6. Démarrer le serveur de développement
 python manage.py runserver
 ```
 
-### Linux / macOS
+### Linux / macOS (Bash)
 
 ```bash
+# 1. Cloner le dépôt et entrer dans le dossier
+git clone https://github.com/Novembo/TODO.git
+cd TODO
+
+# 2. Créer et activer l'environnement virtuel
 python3 -m venv .venv
 source .venv/bin/activate
+
+# 3. Installer les dépendances
 python -m pip install -r requirements.txt
+
+# 4. Configurer les variables d'environnement
 cp .env.example .env
+
+# 5. Appliquer les migrations
 python manage.py migrate
+
+# 6. Démarrer le serveur
 python manage.py runserver
 ```
 
-L'API est immédiatement accessible sur `http://127.0.0.1:8000/`.
-
-Les paramètres de `.env` sont chargés automatiquement au démarrage. La clé `SECRET_KEY` est générée à la volée lorsque `DEBUG=True`. En environnement de production avec `DEBUG=False`, définissez obligatoirement une clé secrète via la variable d'environnement `SECRET_KEY`.
+L'application démarre immédiatement sur **`http://127.0.0.1:8000/`**.  
+La documentation Swagger locale est disponible sur **`http://127.0.0.1:8000/api/docs/`**.
 
 ---
 
-## Tests et vérifications CI
+## 🧪 Tests unitaires et vérifications CI
 
-Exécutez la suite de vérifications et les 20 tests unitaires :
+Le projet dispose d'une suite complète de **20 tests unitaires** couvrant :
+- L'intégrité du modèle `Task` (valeurs par défaut, contraintes de validation, ordonnancement).
+- Les opérations de création, lecture, modification complète (`PUT`), partielle (`PATCH`) et suppression (`DELETE`).
+- La validation des données d'entrée (titres vides, dépassement de 200 caractères).
+- La pagination des résultats et le respect du `max_page_size`.
+- Les codes de retour HTTP standards (200, 201, 204, 400, 404).
+
+Pour exécuter les vérifications en local :
 
 ```bash
 python manage.py check
 python manage.py test tasks
 ```
 
-Le workflow GitHub Actions (`.github/workflows/ci.yml`) exécute automatiquement ces vérifications à chaque push et pull request sur la branche `main`.
+Le workflow GitHub Actions (`.github/workflows/ci.yml`) s'exécute automatiquement à chaque push et pull request sur `main` pour garantir la conformité du code avant toute mise en production.
 
 ---
 
-## Déploiement gratuit recommandé : Render + Neon
+## 💡 Exemples de requêtes avec `curl`
 
-Pour déployer l'API gratuitement de manière fiable et alignée avec vos autres projets (`auth-rbac-api`, `freelance-site`), la combinaison **[Render](https://render.com/)** + **[Neon](https://neon.tech/)** est la solution éprouvée.
+Vous pouvez tester directement l'API en production à l'aide de votre terminal :
 
-### Pourquoi Render + Neon ?
-- **Cohérence :** Même plateforme que vos projets en production.
-- **Base PostgreSQL pérenne :** La base PostgreSQL gratuite de Neon (1 Go de stockage, SSL inclus) ne subit pas l'expiration à 30 jours de la base native de Render.
-- **Simplicité :** Déploiement direct en mode **Web Service** standard (sans complexité de Blueprint).
+### 1. Consulter les tâches existantes
+```bash
+curl https://novembo-todo-api.onrender.com/api/tasks/
+```
 
-### Déploiement en 4 étapes simples
+### 2. Créer une nouvelle tâche
+```bash
+curl -X POST https://novembo-todo-api.onrender.com/api/tasks/ \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Découvrir l API TODO", "description": "Test de création en direct", "is_completed": false}'
+```
 
-1. **Créer la base de données PostgreSQL gratuite sur Neon :**
-   - Créez un projet gratuit sur [neon.tech](https://neon.tech/) et nommez la base `todo`.
-   - Copiez la chaîne de connexion fournie `DATABASE_URL` (assurez-vous qu'elle inclut `?sslmode=require`).
+### 3. Marquer une tâche comme terminée (`PATCH`)
+```bash
+curl -X PATCH https://novembo-todo-api.onrender.com/api/tasks/1/ \
+  -H "Content-Type: application/json" \
+  -d '{"is_completed": true}'
+```
 
-2. **Créer le Web Service sur Render :**
-   - Sur votre tableau de bord [dashboard.render.com](https://dashboard.render.com/), cliquez sur **New +** → **Web Service**.
-   - Connectez votre dépôt GitHub `Novembo/TODO` (branche `main`).
-   - Renseignez les paramètres suivants :
-     - **Name :** `novembo-todo-api`
-     - **Region :** Frankfurt (EU Central)
-     - **Runtime :** Python 3 (ou Docker)
-     - **Build Command :** `bash build.sh`
-     - **Start Command :** `gunicorn Todo.wsgi:application --bind 0.0.0.0:$PORT`
-     - **Instance Type :** Free
-
-3. **Définir les variables d'environnement dans Render :**
-   Dans la section **Environment Variables** :
-   - `DEBUG` : `False`
-   - `SECRET_KEY` : Cliquez sur *Generate* ou saisissez une clé secrète forte.
-   - `DATABASE_URL` : Collez l'URL de connexion Neon copiée à l'étape 1.
-   - `TYPE_DATABASE` : `POSTGRES`
-   - `DATABASE_ENGINE` : `django.db.backends.postgresql`
-   - `DATABASE_NAME` : `todo`
-
-4. **Déployer et tester :**
-   - Cliquez sur **Deploy Web Service**.
-   - Une fois le déploiement terminé, testez les routes :
-     - `/` : Message d'accueil JSON.
-     - `/api/docs/` : Documentation Swagger UI.
-     - `/api/tasks/` : CRUD des tâches.
+### 4. Supprimer une tâche (`DELETE`)
+```bash
+curl -X DELETE https://novembo-todo-api.onrender.com/api/tasks/1/
+```
 
 ---
 
-### Alternative 100% permanente : Alwaysdata
+## ⚙️ Déploiement et Production
 
-Si vous préférez un hébergeur entièrement gratuit à vie sans mise en veille :
-- **[Alwaysdata](https://www.alwaysdata.com/)** propose un plan gratuit permanent (1 Go d'espace, 256 Mo de RAM, 0.25 vCPU, certificats HTTPS Let's Encrypt automatiques, bases PostgreSQL et MySQL natives).
-- La configuration se fait via l'espace d'administration ou SSH en déclarant un site WSGI pointant vers `Todo/wsgi.py`.
+L'infrastructure de production repose sur une architecture moderne découplée :
+- **Serveur d'application :** Hébergé sur **Render** (plan Web Service Free), propulsé par le serveur WSGI **Gunicorn**.
+- **Fichiers statiques :** Optimisés, compressés et servis directement avec des en-têtes de cache pérennes via **WhiteNoise**.
+- **Base de données :** Instance gérée **PostgreSQL Serverless sur Neon**, accessible via une connexion sécurisée chiffrée SSL (`sslmode=require`).
+- **Automatisation du build :** Le script `build.sh` applique automatiquement les migrations de schéma (`migrate --noinput`) et rassemble les fichiers statiques (`collectstatic --no-input`) à chaque livraison.
 
-> **Note sur Koyeb :** Suite au rachat de Koyeb par Mistral AI (Mistral Compute), la création autonome d'applications web classiques et de bases de données grand public a été suspendue sur leur console.  
-> **Note sur PythonAnywhere :** L'ancienne instance (`solv2.pythonanywhere.com`) n'est plus maintenue en raison de ses limitations (absence de PostgreSQL natif gratuit, mise en pause trimestrielle).
+### Variables d'environnement
 
----
-
-## Limites du plan gratuit Render
-
-- **Mise en veille après inactivité :** Les services web gratuits se mettent en veille après 15 minutes d'inactivité. La première requête après une période d'inactivité peut nécessiter 40 à 60 secondes pour réveiller le conteneur.
-- **Stockage éphémère :** Le conteneur Web réinitialise son système de fichiers à chaque redémarrage. Toutes les données persistantes sont conservées dans la base Neon PostgreSQL.
-
----
-
-## Récapitulatif des variables d'environnement
-
-| Variable | Local (.env) | Production (Render / Neon) | Rôle |
+| Variable | Exemple Local | Production (Render) | Rôle |
 |---|---|---|---|
-| `DEBUG` | `True` | `False` | Active/désactive le mode débogage Django |
-| `SECRET_KEY` | *(auto-générée si DEBUG)* | Clé aléatoire robuste | Clé cryptographique Django |
-| `ALLOWED_HOSTS` | `127.0.0.1,localhost` | `.onrender.com,localhost` | Domaines autorisés pour les requêtes HTTP |
-| `DATABASE_URL` | *(vide en local)* | `postgresql://...` | Chaîne de connexion PostgreSQL Neon |
-| `TYPE_DATABASE` | `SQLITE` | `POSTGRES` | Type de base de données |
-| `CORS_ALLOWED_ORIGINS`| `http://localhost:8000` | Domaines frontend autorisés | Origines CORS acceptées |
+| `DEBUG` | `True` | `False` | Désactive les traces de débogage en production |
+| `SECRET_KEY` | *(générée à la volée)* | Clé cryptographique forte | Sécurise les sessions, signatures et jetons |
+| `ALLOWED_HOSTS` | `127.0.0.1,localhost` | `.onrender.com,localhost` | Hôtes et noms de domaine autorisés par Django |
+| `DATABASE_URL` | *(laissée vide)* | `postgresql://...neon.tech/...` | Chaîne de connexion PostgreSQL avec SSL requis |
+| `TYPE_DATABASE` | `SQLITE` | `POSTGRES` | Pilote de base de données à charger |
+| `DATABASE_ENGINE` | `django.db.backends.sqlite3` | `django.db.backends.postgresql` | Moteur ORM Django |
+| `CORS_ALLOWED_ORIGINS` | `http://localhost:8000` | Origines autorisées (ex: frontend web) | Autorisation des requêtes cross-origin |
