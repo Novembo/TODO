@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management.utils import get_random_secret_key
 import os
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlparse
 
 
 load_dotenv()
@@ -42,6 +42,19 @@ ALLOWED_HOSTS = [
     for host in os.environ.get("ALLOWED_HOSTS", "127.0.0.1,localhost,vercel.app").split(",")
     if host.strip()
 ]
+render_hostname = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if render_hostname and render_hostname not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(render_hostname)
+
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
+    if origin.strip()
+]
+render_url = os.environ.get("RENDER_EXTERNAL_URL")
+if render_url and render_url not in CSRF_TRUSTED_ORIGINS:
+    CSRF_TRUSTED_ORIGINS.append(render_url)
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
 # Application definition
@@ -115,24 +128,27 @@ DATABASES = {
         or (
             "django.db.backends.postgresql"
             if os.environ.get("TYPE_DATABASE", "").strip().lower() in {"postgres", "postgresql"}
-            else "django.db.backends.sqlite3",
+            else "django.db.backends.sqlite3"
         ),
         "NAME": os.environ.get("DATABASE_NAME") or str(BASE_DIR / "db.sqlite3"),
     }
 }
 
-# Configuration pour production (Vercel)
-if os.environ.get('VERCEL_ENV'):
-    # Utilise la variable d'environnement fournie par Neon
-    db_info = urlparse(os.environ['DATABASE_URL'])
-    
-    DATABASES['default'] = {
+database_url = os.environ.get("DATABASE_URL")
+if database_url:
+    db_info = urlparse(database_url)
+    if db_info.scheme not in {"postgres", "postgresql"}:
+        raise ImproperlyConfigured("DATABASE_URL must use PostgreSQL.")
+    if not db_info.hostname or not db_info.path.strip("/"):
+        raise ImproperlyConfigured("DATABASE_URL must include a database name and host.")
+
+    DATABASES["default"] = {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': db_info.path[1:],
-        'USER': db_info.username,
-        'PASSWORD': db_info.password,
+        'NAME': unquote(db_info.path.lstrip("/")),
+        'USER': unquote(db_info.username or ""),
+        'PASSWORD': unquote(db_info.password or ""),
         'HOST': db_info.hostname,
-        'PORT': db_info.port,
+        'PORT': db_info.port or 5432,
         'OPTIONS': {'sslmode': 'require'},
     }
 

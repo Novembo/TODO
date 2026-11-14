@@ -1,127 +1,70 @@
-# API de Gestion de Tâches (TODO) - Django REST Framework
+# TODO — API de gestion de tâches
 
-## Description du Projet
+[![CI](https://github.com/Novembo/TODO/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Novembo/TODO/actions/workflows/ci.yml)
 
-API REST complète pour la gestion de tâches développée avec **Django** et **Django REST Framework**.
+API REST de gestion de tâches construite avec Django REST Framework. Elle propose les opérations CRUD, la pagination et une documentation OpenAPI/Swagger.
 
-### Fonctionnalités principales
-- **CRUD complet** via API REST
-- **Documentation interactive** Swagger/OpenAPI
-- **Tests unitaires** complets (20 tests)
-- **Déploiement** sur PythonAnywhere
-- **Pagination automatique** des résultats
-- **Validation des données** robuste
+**Stack :** Django · Django REST Framework · drf-spectacular · SQLite en local · PostgreSQL en hébergement · WhiteNoise
 
-## URLs du Projet Déployé
+## Fonctionnalités et documentation
 
-- **URL principale de l'API** : `https://solv2.pythonanywhere.com`
-- **Documentation Swagger UI** : `https://solv2.pythonanywhere.com/api/docs/`
-- **Schéma OpenAPI** : `https://solv2.pythonanywhere.com/api/schema/`
+- CRUD des tâches sur `/api/tasks/` et `/api/tasks/{id}/`
+- Pagination configurable par `page_size` (maximum : 100)
+- Documentation Swagger UI : `/api/docs/`
+- Schéma OpenAPI : `/api/schema/`
 
-## Limitations du Plan Gratuit PythonAnywhere
+## Lancer en local
 
-Le projet est déployé sur le plan gratuit de PythonAnywhere, qui présente les limitations suivantes :
+Prérequis : Python 3.10 ou plus récent.
 
-| Limitation | Impact sur le projet |
-|------------|----------------------|
-| **Mise en veille après 3 mois d'inactivité** | Le compte est désactivé après 3 mois sans connexion |
-| **Redémarrage manuel requis** | Après modifications du code, redémarrage manuel nécessaire via le dashboard |
-| **512 Mo d'espace disque** | Suffisant pour ce projet (base de données SQLite + code) |
-| **Pas de processus en arrière-plan** | Impossible d'exécuter des tâches planifiées (non nécessaire ici) |
-| **Base de données SQLite uniquement** | Parfait pour un projet de démonstration |
+### Windows PowerShell
 
-**Note importante** : Si l'API semble lente au premier chargement, c'est normal car PythonAnywhere réveille l'application après une période d'inactivité.
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+Copy-Item .env.example .env
+python manage.py migrate
+python manage.py runserver
+```
 
----
+### Linux/macOS
 
-## Configuration
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+cp .env.example .env
+python manage.py migrate
+python manage.py runserver
+```
 
-Le fichier `.env` local est chargé automatiquement et reste exclu de Git. Le workflow GitHub Actions utilise les variables de dépôt `DEBUG`, `ALLOWED_HOSTS`, `CORS_ALLOWED_ORIGINS`, `CORS_ALLOW_METHODS`, `TYPE_DATABASE`, `DATABASE_ENGINE` et `DATABASE_NAME`.
+L'API est disponible sur `http://127.0.0.1:8000/`.
 
-En production, définissez également `SECRET_KEY` dans l'environnement de l'hébergeur. Ne la commitez jamais. Quand `DEBUG` est désactivé, l'application refuse de démarrer sans cette clé.
+Les paramètres de `.env` sont chargés en local. `SECRET_KEY` est générée temporairement lorsque `DEBUG=True`; définissez une clé via l'environnement pour tout déploiement avec `DEBUG=False`.
 
----
+## Tests
 
-## Installation Locale
+```bash
+python manage.py check
+python manage.py test tasks
+```
 
-### Prérequis
-- Python 3.9 ou supérieur
-- pip (gestionnaire de paquets Python)
-- Git
+Le workflow GitHub Actions exécute ces commandes sur les pull requests vers `main` et les pushes sur `main`.
 
-### Étapes d'installation
+## Déploiement gratuit recommandé : Render + Neon
 
-1. **Cloner le dépôt**
-   git clone https://github.com/votre-username/todo-api-django.git
-   cd todo-api-django
+Le dépôt contient `render.yaml` et `build.sh` pour créer un service Django gratuit sur Render. Le déploiement automatique est déclenché uniquement lorsque les vérifications CI réussissent.
 
-2. **Créer un environnement virtuel**
-    # Windows
-    python -m venv venv
-    venv\Scripts\activate
+1. Créez une base PostgreSQL gratuite sur [Neon](https://neon.tech/) et copiez sa chaîne de connexion `DATABASE_URL` avec SSL.
+2. Dans Render, choisissez **New → Blueprint** et connectez `Novembo/TODO`.
+3. Fournissez la chaîne Neon lorsque Render demande `DATABASE_URL`. Render génère `SECRET_KEY`; ne la placez pas dans Git.
+4. Après le premier déploiement, vérifiez `/`, `/api/docs/` et `/api/tasks/`.
 
-    # Linux/Mac
-    python3 -m venv venv
-    source venv/bin/activate
+`DATABASE_URL` et `SECRET_KEY` sont configurées dans Render, pas dans les variables GitHub Actions. Le nouveau déploiement démarre avec une base Neon vide : les données de l'ancienne instance PythonAnywhere ne sont pas transférées automatiquement. Gardez cette instance jusqu'à validation et export des données si nécessaire.
 
-3. **Installer les dépendances**
-    pip install -r requirements.txt
+**Limites du gratuit (vérifiées en novembre 2026) :** Render met en veille un service inactif après 15 minutes; le réveil peut prendre environ une minute, et son système de fichiers est éphémère. Neon Free offre jusqu'à 1 Go de stockage et suspend le calcul après inactivité; il n'inclut pas les sauvegardes des plans payants. La base PostgreSQL gratuite de Render expire après 30 jours, elle n'est donc pas utilisée ici. Cette combinaison convient à une démo ou un projet personnel, pas à une application exigeant une disponibilité ou des sauvegardes garanties.
 
-4. **Initialiser la base de données**
-    ### Si vous utilisez une base de données autre que SQLITE, 
-    ### vous devez d'abord créer la base de données avant de l'initialiser
-    python manage.py migrate
+## Configuration des variables
 
-5. **Lancer le serveur**
-    python manage.py runserver
-
-
-6. **L'application sera accessible aux URLs suivantes :**
-    _Interface API : http://localhost:8000/_
-    _Administration Django : http://localhost:8000/admin/_
-    _Documentation Swagger : http://localhost:8000/api/docs/_
-
-7. **Exécuter les tests**
-    # Exécuter tous les tests
-    python manage.py test tasks
-
-
-
-8. **Informations Supplémentaires**
-## Justification du choix
-    PythonAnywhere pour le déploiement
-
-        Support natif de Django
-
-        Base de données SQLite incluse
-
-        Interface de gestion simple
-
-        Idéal pour projets de démonstration
-
-    Structure d'API RESTful
-
-        URLs sémantiques (/api/tasks/, /api/tasks/{id}/)
-
-        Méthodes HTTP appropriées (GET, POST, PUT, PATCH, DELETE)
-
-        Codes de statut HTTP significatifs
-
-    Documentation auto-générée
-
-        drf-spectacular pour OpenAPI 3.0
-
-        Interface Swagger UI interactive
-
-        Exemples de requêtes intégrés
-
-
-Pour tester l'application déployée :
-
-    Visitez l'URL principale pour voir la page d'accueil de l'API
-
-    Utilisez /api/docs/ pour explorer l'API interactivement
-
-    Testez les endpoints CRUD directement depuis Swagger UI
-
-    Vérifiez les tests unitaires dans le dépôt Git
+Les variables non secrètes `DEBUG`, `ALLOWED_HOSTS`, `CORS_ALLOWED_ORIGINS`, `CORS_ALLOW_METHODS`, `TYPE_DATABASE`, `DATABASE_ENGINE` et `DATABASE_NAME` sont enregistrées comme variables du dépôt pour le CI. Les secrets de déploiement restent dans le gestionnaire de secrets de l'hébergeur.

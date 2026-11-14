@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: novembo-todo-api
+    runtime: python
+    plan: free
+    region: frankfurt
+    branch: main
+    autoDeployTrigger: checksPass
+    buildCommand: bash build.sh
+    startCommand: gunicorn Todo.wsgi:application --bind 0.0.0.0:$PORT
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.10"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: TYPE_DATABASE
+        value: POSTGRES
+      - key: DATABASE_ENGINE
+        value: django.db.backends.postgresql
+      - key: DATABASE_NAME
+        value: todo
+      - key: DATABASE_URL
+        sync: false
