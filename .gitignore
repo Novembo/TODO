@@ -10,6 +10,7 @@
 *.wmv
 
 *.env
+.env
 *.sqlite3
 
 *.pdf
