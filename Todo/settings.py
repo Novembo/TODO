@@ -39,12 +39,16 @@ if not SECRET_KEY:
 
 ALLOWED_HOSTS = [
     host.strip()
-    for host in os.environ.get("ALLOWED_HOSTS", "127.0.0.1,localhost,vercel.app").split(",")
+    for host in os.environ.get("ALLOWED_HOSTS", "127.0.0.1,localhost,vercel.app,.koyeb.app,.onrender.com").split(",")
     if host.strip()
 ]
 render_hostname = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 if render_hostname and render_hostname not in ALLOWED_HOSTS:
     ALLOWED_HOSTS.append(render_hostname)
+
+koyeb_domain = os.environ.get("KOYEB_PUBLIC_DOMAIN")
+if koyeb_domain and koyeb_domain not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(koyeb_domain)
 
 CSRF_TRUSTED_ORIGINS = [
     origin.strip()
@@ -54,6 +58,11 @@ CSRF_TRUSTED_ORIGINS = [
 render_url = os.environ.get("RENDER_EXTERNAL_URL")
 if render_url and render_url not in CSRF_TRUSTED_ORIGINS:
     CSRF_TRUSTED_ORIGINS.append(render_url)
+
+if koyeb_domain:
+    koyeb_url = f"https://{koyeb_domain}"
+    if koyeb_url not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(koyeb_url)
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
