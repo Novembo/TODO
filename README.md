@@ -18,6 +18,17 @@ API REST de gestion de tâches construite avec Django REST Framework. Elle propo
 
 ---
 
+## 🔗 Déploiement en ligne (Production)
+
+L'API est déployée et active sur **Render** avec persistance sur **Neon PostgreSQL** :
+
+- **Racine de l'API :** [https://novembo-todo-api.onrender.com/](https://novembo-todo-api.onrender.com/)
+- **Documentation Swagger UI :** [https://novembo-todo-api.onrender.com/api/docs/](https://novembo-todo-api.onrender.com/api/docs/)
+- **Schéma OpenAPI :** [https://novembo-todo-api.onrender.com/api/schema/](https://novembo-todo-api.onrender.com/api/schema/)
+- **Endpoint des tâches :** [https://novembo-todo-api.onrender.com/api/tasks/](https://novembo-todo-api.onrender.com/api/tasks/)
+
+---
+
 ## Lancer en local
 
 ### Prérequis
