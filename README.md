@@ -64,67 +64,75 @@ Le workflow GitHub Actions (`.github/workflows/ci.yml`) exécute automatiquement
 
 ---
 
-## Hébergement gratuit recommandé : Koyeb (+ PostgreSQL Serverless)
+## Déploiement gratuit recommandé : Render + Neon
 
-Pour déployer l'API gratuitement et de manière pérenne, **[Koyeb](https://www.koyeb.com/)** est la solution recommandée.
+Pour déployer l'API gratuitement de manière fiable et alignée avec vos autres projets (`auth-rbac-api`, `freelance-site`), la combinaison **[Render](https://render.com/)** + **[Neon](https://neon.tech/)** est la solution éprouvée.
 
-### Pourquoi Koyeb est conseillé face aux alternatives :
-1. **Pas d'expiration de la base de données :** Contrairement à Render dont la base PostgreSQL gratuite est automatiquement détruite après 30 jours, Koyeb intègre une base PostgreSQL Serverless gratuite et permanente (1 Go de stockage, propulsée par le moteur Neon).
-2. **Instance Nano gratuite :** 512 Mo de RAM, 0.1 vCPU, région Europe (Francfort `fra`), aucun renseignement de carte bancaire requis à l'inscription.
-3. **Déploiement déclaratif & automatique :** Déploiement continu automatisé à chaque `git push` sur `main` via `koyeb.yaml` ou le `Dockerfile` prêt à l'emploi.
-4. **HTTPS & domaine mondial :** Certificat SSL géré automatiquement sur `*.koyeb.app`.
+### Pourquoi Render + Neon ?
+- **Cohérence :** Même plateforme que vos projets en production.
+- **Base PostgreSQL pérenne :** La base PostgreSQL gratuite de Neon (1 Go de stockage, SSL inclus) ne subit pas l'expiration à 30 jours de la base native de Render.
+- **Simplicité :** Déploiement direct en mode **Web Service** standard (sans complexité de Blueprint).
 
-### Déploiement en 4 étapes simples sur Koyeb
+### Déploiement en 4 étapes simples
 
-1. **Créer la base de données PostgreSQL gratuite :**
-   - Dans la console Koyeb, cliquez sur **Create** → **Database Service**.
-   - Choisissez le moteur PostgreSQL (plan gratuit), nommez-le `todo-db`, région **Frankfurt (fra)**.
-   - Copiez l'URL de connexion fournie (`DATABASE_URL`). *(Vous pouvez également utiliser directement une base gratuite [Neon](https://neon.tech/))*.
+1. **Créer la base de données PostgreSQL gratuite sur Neon :**
+   - Créez un projet gratuit sur [neon.tech](https://neon.tech/) et nommez la base `todo`.
+   - Copiez la chaîne de connexion fournie `DATABASE_URL` (assurez-vous qu'elle inclut `?sslmode=require`).
 
-2. **Créer le service Web :**
-   - Cliquez sur **Create** → **Service** → sélectionnez **GitHub**.
-   - Connectez votre compte et choisissez le dépôt `Novembo/TODO` (branche `main`).
-   - Le fichier `koyeb.yaml` configure automatiquement la commande de build (`bash build.sh`) et de démarrage (`gunicorn Todo.wsgi:application --bind 0.0.0.0:8000`).
+2. **Créer le Web Service sur Render :**
+   - Sur votre tableau de bord [dashboard.render.com](https://dashboard.render.com/), cliquez sur **New +** → **Web Service**.
+   - Connectez votre dépôt GitHub `Novembo/TODO` (branche `main`).
+   - Renseignez les paramètres suivants :
+     - **Name :** `novembo-todo-api`
+     - **Region :** Frankfurt (EU Central)
+     - **Runtime :** Python 3 (ou Docker)
+     - **Build Command :** `bash build.sh`
+     - **Start Command :** `gunicorn Todo.wsgi:application --bind 0.0.0.0:$PORT`
+     - **Instance Type :** Free
 
-3. **Configurer les variables d'environnement dans Koyeb :**
-   Dans l'onglet **Environment variables** du service :
+3. **Définir les variables d'environnement dans Render :**
+   Dans la section **Environment Variables** :
    - `DEBUG` : `False`
-   - `SECRET_KEY` : *[votre clé secrète aléatoire de production]*
-   - `DATABASE_URL` : *[la chaîne de connexion PostgreSQL avec sslmode=require]*
+   - `SECRET_KEY` : Cliquez sur *Generate* ou saisissez une clé secrète forte.
+   - `DATABASE_URL` : Collez l'URL de connexion Neon copiée à l'étape 1.
    - `TYPE_DATABASE` : `POSTGRES`
-   - `ALLOWED_HOSTS` : `127.0.0.1,localhost,.koyeb.app`
+   - `DATABASE_ENGINE` : `django.db.backends.postgresql`
+   - `DATABASE_NAME` : `todo`
 
-4. **Déployer et vérifier :**
-   - Cliquez sur **Deploy**.
-   - Une fois le statut passé à `Healthy`, testez les routes :
-     - `/` : Retour JSON de bienvenue.
-     - `/api/docs/` : Interface Swagger UI interactive.
-     - `/api/tasks/` : Liste et création des tâches.
-
----
-
-### Alternative : Déploiement sur Render
-
-Le dépôt conserve également la configuration `render.yaml` pour un déploiement sur [Render](https://render.com/). Pour Render, il est fortement conseillé de connecter une base externe gratuite sur [Neon](https://neon.tech/) car la base native de Render expire au bout de 30 jours.
-
-> **Note sur l'ancien hébergement PythonAnywhere :** L'ancienne instance PythonAnywhere (`solv2.pythonanywhere.com`) n'est plus maintenue en raison de ses limitations (absence de PostgreSQL natif dans le plan gratuit, mise en pause trimestrielle manuelle).
+4. **Déployer et tester :**
+   - Cliquez sur **Deploy Web Service**.
+   - Une fois le déploiement terminé, testez les routes :
+     - `/` : Message d'accueil JSON.
+     - `/api/docs/` : Documentation Swagger UI.
+     - `/api/tasks/` : CRUD des tâches.
 
 ---
 
-## Limites du plan gratuit
+### Alternative 100% permanente : Alwaysdata
 
-- **Koyeb Free Tier :** 1 service web Nano gratuit (512 Mo RAM, calcul Eco avec mise en veille après inactivité puis réveil transparent à la première requête), 1 service PostgreSQL Serverless gratuit (1 Go de stockage).
-- **Système de fichiers éphémère :** Les fichiers uploadés ou modifications locales du conteneur ne persistent pas lors des redémarrages (les données doivent impérativement résider dans la base PostgreSQL).
+Si vous préférez un hébergeur entièrement gratuit à vie sans mise en veille :
+- **[Alwaysdata](https://www.alwaysdata.com/)** propose un plan gratuit permanent (1 Go d'espace, 256 Mo de RAM, 0.25 vCPU, certificats HTTPS Let's Encrypt automatiques, bases PostgreSQL et MySQL natives).
+- La configuration se fait via l'espace d'administration ou SSH en déclarant un site WSGI pointant vers `Todo/wsgi.py`.
+
+> **Note sur Koyeb :** Suite au rachat de Koyeb par Mistral AI (Mistral Compute), la création autonome d'applications web classiques et de bases de données grand public a été suspendue sur leur console.  
+> **Note sur PythonAnywhere :** L'ancienne instance (`solv2.pythonanywhere.com`) n'est plus maintenue en raison de ses limitations (absence de PostgreSQL natif gratuit, mise en pause trimestrielle).
+
+---
+
+## Limites du plan gratuit Render
+
+- **Mise en veille après inactivité :** Les services web gratuits se mettent en veille après 15 minutes d'inactivité. La première requête après une période d'inactivité peut nécessiter 40 à 60 secondes pour réveiller le conteneur.
+- **Stockage éphémère :** Le conteneur Web réinitialise son système de fichiers à chaque redémarrage. Toutes les données persistantes sont conservées dans la base Neon PostgreSQL.
 
 ---
 
 ## Récapitulatif des variables d'environnement
 
-| Variable | Local (.env) | Production (Koyeb / Render) | Rôle |
+| Variable | Local (.env) | Production (Render / Neon) | Rôle |
 |---|---|---|---|
 | `DEBUG` | `True` | `False` | Active/désactive le mode débogage Django |
 | `SECRET_KEY` | *(auto-générée si DEBUG)* | Clé aléatoire robuste | Clé cryptographique Django |
-| `ALLOWED_HOSTS` | `127.0.0.1,localhost` | `.koyeb.app,.onrender.com` | Domaines autorisés pour les requêtes HTTP |
-| `DATABASE_URL` | *(vide en local)* | `postgresql://...` | Chaîne de connexion PostgreSQL de production |
+| `ALLOWED_HOSTS` | `127.0.0.1,localhost` | `.onrender.com,localhost` | Domaines autorisés pour les requêtes HTTP |
+| `DATABASE_URL` | *(vide en local)* | `postgresql://...` | Chaîne de connexion PostgreSQL Neon |
 | `TYPE_DATABASE` | `SQLITE` | `POSTGRES` | Type de base de données |
 | `CORS_ALLOWED_ORIGINS`| `http://localhost:8000` | Domaines frontend autorisés | Origines CORS acceptées |
