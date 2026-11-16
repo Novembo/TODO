@@ -7,9 +7,32 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon%20Serverless-4169e1?logo=postgresql)
 ![Status](https://img.shields.io/badge/Production-Live-success)
 
-API REST complète et performante de gestion de tâches construite avec **Django REST Framework (DRF)**. Le projet propose les opérations CRUD complètes, la pagination configurable, la validation stricte des données et une documentation interactive **OpenAPI v3 / Swagger UI**.
+API REST de gestion de tâches conçue comme un produit fonctionnel, pas seulement comme un tutorial CRUD. Elle couvre les opérations principales d’un outil de suivi d’activité : création, liste, détail, modification, filtres, pagination, validation des données et documentation publique.
+
+Ce projet montre que je peux livrer un backend Django/DRF avec :
+- une API exploitable en production,
+- sécurité de base et validation des entrées,
+- pagination et schémas explicites,
+- intégration CI/CD et base de données adaptée à l’environnement réel,
+- documentation API de niveau professionnel.
 
 **Stack technique :** Python 3.12 · Django 5 · Django REST Framework · drf-spectacular · PostgreSQL (Neon Serverless) · SQLite (local) · Gunicorn · WhiteNoise · Docker · GitHub Actions
+
+## Pourquoi ce projet est crédible
+
+- il illustre un produit fonctionnel et lisible,
+- l’API expose un comportement cohérent et documenté,
+- le projet a une vraie logique de mise en production,
+- il met en avant la capacité à construire des services backend complets avec une architecture claire,
+- il démontre une compréhension de la maintenance, du déploiement et de la qualité d’intégration.
+
+## Méthodologie de travail
+
+1. Définir les cas d’usage métier et la structure des ressources.
+2. Construire des modèles/classement lisibles et cohérents.
+3. Ajouter validation, pagination et schémas API explicites.
+4. Tester les cas de succès et d’erreur avant mise en production.
+5. Documenter l’API pour que le projet soit utilisable et maintenable.
 
 ---
 
