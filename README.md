@@ -5,38 +5,33 @@
 ![Django](https://img.shields.io/badge/Django-5.0-092e20?logo=django)
 ![DRF](https://img.shields.io/badge/DRF-3.15-red)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon%20Serverless-4169e1?logo=postgresql)
-![Status](https://img.shields.io/badge/Production-Live-success)
+![Statut](https://img.shields.io/badge/D%C3%A9mo-Publique-informational)
 
-API REST de gestion de tâches conçue comme un produit fonctionnel, pas seulement comme un tutorial CRUD. Elle couvre les opérations principales d’un outil de suivi d’activité : création, liste, détail, modification, filtres, pagination, validation des données et documentation publique.
+API REST de gestion de tâches construite avec Django REST Framework. Elle propose les opérations CRUD, la validation des entrées, la pagination et une documentation OpenAPI.
 
-Ce projet montre que je peux livrer un backend Django/DRF avec :
-- une API exploitable en production,
-- sécurité de base et validation des entrées,
-- pagination et schémas explicites,
-- intégration CI/CD et base de données adaptée à l’environnement réel,
-- documentation API de niveau professionnel.
+> **Démo publique :** l’API n’exige pas d’authentification et toutes les tâches sont partagées. Elle sert à la démonstration; n’y envoyez pas de données personnelles ou sensibles. Utilisez l’environnement local pour les exemples qui créent, modifient ou suppriment des tâches.
+
+Le dépôt illustre un backend Django/DRF avec pagination, schémas OpenAPI, tests automatisés et configuration de déploiement Render.
 
 **Stack technique :** Python 3.12 · Django 5 · Django REST Framework · drf-spectacular · PostgreSQL (Neon Serverless) · SQLite (local) · Gunicorn · WhiteNoise · Docker · GitHub Actions
 
-## Pourquoi ce projet est crédible
+## Périmètre et limites
 
-- il illustre un produit fonctionnel et lisible,
-- l’API expose un comportement cohérent et documenté,
-- le projet a une vraie logique de mise en production,
-- il met en avant la capacité à construire des services backend complets avec une architecture claire,
-- il démontre une compréhension de la maintenance, du déploiement et de la qualité d’intégration.
+- les tâches ne sont pas rattachées à un compte utilisateur;
+- les endpoints de création, modification et suppression sont accessibles sans authentification;
+- la démo hébergée est publique et ne doit pas recevoir de données réelles.
 
 ## Méthodologie de travail
 
 1. Définir les cas d’usage métier et la structure des ressources.
-2. Construire des modèles/classement lisibles et cohérents.
+2. Construire un modèle et des sérialiseurs lisibles et cohérents.
 3. Ajouter validation, pagination et schémas API explicites.
 4. Tester les cas de succès et d’erreur avant mise en production.
 5. Documenter l’API pour que le projet soit utilisable et maintenable.
 
 ---
 
-## 🚀 Démo en ligne (Production)
+## 🚀 Démo en ligne
 
 L'API est hébergée sur **Render** et reliée à une base de données **PostgreSQL serverless sur Neon** :
 
@@ -171,43 +166,43 @@ python manage.py check
 python manage.py test tasks
 ```
 
-Le workflow GitHub Actions (`.github/workflows/ci.yml`) s'exécute automatiquement à chaque push et pull request sur `main` pour garantir la conformité du code avant toute mise en production.
+Le workflow GitHub Actions (`.github/workflows/ci.yml`) exécute `manage.py check` et les tests sur chaque push et pull request vers `main`. Le manifeste Render configure l’auto-déploiement après succès des vérifications.
 
 ---
 
-## 💡 Exemples de requêtes avec `curl`
+## 💡 Exemples locaux avec `curl`
 
-Vous pouvez tester directement l'API en production à l'aide de votre terminal :
+L’API locale doit être démarrée sur `http://127.0.0.1:8000`. Les requêtes d’écriture ci-dessous ne ciblent volontairement pas la démo publique.
 
 ### 1. Consulter les tâches existantes
 ```bash
-curl https://novembo-todo-api.onrender.com/api/tasks/
+curl http://127.0.0.1:8000/api/tasks/
 ```
 
 ### 2. Créer une nouvelle tâche
 ```bash
-curl -X POST https://novembo-todo-api.onrender.com/api/tasks/ \
+curl -X POST http://127.0.0.1:8000/api/tasks/ \
   -H "Content-Type: application/json" \
   -d '{"title": "Découvrir l API TODO", "description": "Test de création en direct", "is_completed": false}'
 ```
 
 ### 3. Marquer une tâche comme terminée (`PATCH`)
 ```bash
-curl -X PATCH https://novembo-todo-api.onrender.com/api/tasks/1/ \
+curl -X PATCH http://127.0.0.1:8000/api/tasks/1/ \
   -H "Content-Type: application/json" \
   -d '{"is_completed": true}'
 ```
 
 ### 4. Supprimer une tâche (`DELETE`)
 ```bash
-curl -X DELETE https://novembo-todo-api.onrender.com/api/tasks/1/
+curl -X DELETE http://127.0.0.1:8000/api/tasks/1/
 ```
 
 ---
 
-## ⚙️ Déploiement et Production
+## ⚙️ Hébergement de démonstration
 
-L'infrastructure de production repose sur une architecture moderne découplée :
+La démo est hébergée sur Render et utilise une base PostgreSQL configurée séparément :
 - **Serveur d'application :** Hébergé sur **Render** (plan Web Service Free), propulsé par le serveur WSGI **Gunicorn**.
 - **Fichiers statiques :** Optimisés, compressés et servis directement avec des en-têtes de cache pérennes via **WhiteNoise**.
 - **Base de données :** Instance gérée **PostgreSQL Serverless sur Neon**, accessible via une connexion sécurisée chiffrée SSL (`sslmode=require`).
