@@ -19,9 +19,9 @@ class TaskPagination(PageNumberPagination):
 @api_view(['GET'])
 def home_view(request):
     data = {
-        'api_name': 'TODO',
-        'version': '1.0.0',
-        'description': 'API REST pour la gestion de tâches',
+        'api_name': 'Word Ladder TODO',
+        'version': '1.0.1',
+        'description': 'API REST pour la gestion de tâches (version consolidée)',
         'endpoints': {
             'GET /api/tasks/': 'Liste toutes les tâches (avec pagination)',
             'POST /api/tasks/': 'Crée une nouvelle tâche',
